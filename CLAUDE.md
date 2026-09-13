@@ -250,16 +250,14 @@ queue for the whole timeout and then fails it, so the required set
 is read off the workflow's `if:` conditions rather than assumed
 from the list of jobs.
 
-It was created 2026-09-13, and both halves of that date matter.
-An earlier ruleset 21131040 was described here for weeks and never
-existed, retracted 2026-09-12; `scripts/check_rulesets.py` now
-fails when a document names a ruleset the repository does not
-carry, so this paragraph is checkable rather than asserted. And a
-queue was refused on
-2026-09-12 because every pull request that day sat `queued` on
-starved runners, where an ALLGREEN queue would have stopped every
-merge rather than gated it. Checks completed in seconds on
-2026-09-13, which is what changed.
+`scripts/check_rulesets.py` fails when a document names a ruleset
+the repository does not carry, so these paragraphs are checkable
+rather than asserted.
+
+A queue was refused on 2026-09-12 because every pull request that
+day sat `queued` on starved runners, where an ALLGREEN queue would
+have stopped every merge rather than gated it. Checks completed in
+seconds on 2026-09-13, which is what changed.
 
 `dot-claude` runs the same shape under ruleset 23145798, gating on
 its one check, `skills`. It had no workflow at all until

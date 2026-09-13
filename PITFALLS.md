@@ -222,11 +222,8 @@ check that never runs holds the queue for the whole 60 minutes and then fails it
 required set is read off each job's `if:` condition rather than assumed from the list of
 jobs.
 
-**An earlier id in this entry named nothing.** It described main ruleset id 21131040 with
-`MERGE` method, `ALLGREEN` grouping and a 60-minute timeout while the repository carried
-zero rulesets and that id returned 404. Retracted 2026-09-12.
 `scripts/check_rulesets.py` reads the ids named in `CLAUDE.md` and this file and fails
-when the repository does not carry them, so the claim cannot go stale again in silence.
+when the repository does not carry them, so a claim cannot go stale in silence.
 
 **When not to enable, and why that changed.** A repo with a single committer and
 rarely-concurrent PRs gains serialisation with no contention to serialise, which still
