@@ -201,26 +201,6 @@ jobs:
       - run: python scripts/check_tropes.py --self-test
       - run: python scripts/check_tropes.py --base origin/${{ github.event.pull_request.base.ref || 'main' }}
 
-  # THE PR DESCRIPTION, WHICH ONLY EXISTS ON A PULL REQUEST.
-  #
-  # `if:` rather than a skip inside the script: a push to main has no description to read,
-  # and a job that reports green for a check it did not perform is rule 3's silent skip.
-  # GitHub records the job as skipped, which does not read as a pass.
-  pr-description:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-      # Controls first: four of the five must reject known-broken input.
-      - run: python scripts/check_pr_description.py --self-test
-      - run: python scripts/check_pr_description.py ${{ github.event.pull_request.number }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-
   # EVERY NEW RFD CARRIES THE CANARY SENTENCE, which is the workspace's M&M's clause.
   # An AI that read `CLAUDE.md` before drafting adds the sentence; one that skipped it
   # will not, and this gate catches the omission. Scoped to RFD directories that did

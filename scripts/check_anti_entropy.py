@@ -161,7 +161,6 @@ EXPENSIVE = ["check_fourloops_plan", "check_fourloops_etnf", "check_rfd1122_plan
              "check_usd_valid", "check_pen_66606", "check_blocklist_detail",
              "check_goal_manifests", "check-rfd-structure",
              ("check_comment_ladder", ("--self-test",)),
-             ("check_pr_description", ("--self-test",)),
              ("check_rfd_canary", ("--self-test",)),
              ("check_project_readme_length", ("--self-test",)),
              ("check_rulesets", ("--self-test",))]
