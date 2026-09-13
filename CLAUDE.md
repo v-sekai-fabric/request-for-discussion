@@ -238,27 +238,32 @@ Operator directive 2026-09-05, verbatim: _"can you bundle the
 merges together and allow admin merging"_. This rule is the
 bundle half.
 
-**This repository has no ruleset and no branch protection.**
-Earlier text here described a merge queue under ruleset 21131040
-with `MERGE` method and `ALLGREEN` grouping, and an admin bypass
-at `RepositoryRole 5`. The repository carries zero rulesets and
-that id returns 404, so nothing required a green check and
-nothing was bypassed. Retracted 2026-09-12, measured with
-`scripts/check_rulesets.py`, which now fails when a document
-names a ruleset the repository does not carry.
+**The merge queue is ruleset 23145233**, on the default branch:
+`MERGE` method, `ALLGREEN` grouping, a 60-minute check timeout,
+batches of up to five, and a pull request required with zero
+approvals. Seven checks are required, and they are the seven that
+run on a `merge_group` event: prek, goal-manifests, rfd-numbers,
+rfd-serials, rfd-structure, comment-ladder and trope-density.
 
-Merging is therefore unguarded, and the cost is recorded rather
-than implied: RFD 2245 landed with six of nine checks red and
-stopped `mix rfd.render` for all 318 RFD sources until it was
-trimmed. Read the checks before merging, because nothing else
-will.
+Requiring a check that does not run on `merge_group` hangs the
+queue for the whole timeout and then fails it, so the required set
+is read off the workflow's `if:` conditions rather than assumed
+from the list of jobs.
 
-A queue is not the fix while the checks themselves do not run.
-Every pull request on 2026-09-11 and 2026-09-12 sat `queued` on
-GitHub-hosted runners, several for over half an hour, and an
-ALLGREEN queue waits on exactly those checks. Enabling one now
-would stop every merge rather than gate it. Runner capacity
-comes first; PITFALLS 11 carries the rest of the argument.
+It was created 2026-09-13, and both halves of that date matter.
+An earlier ruleset 21131040 was described here for weeks and never
+existed, retracted 2026-09-12; `scripts/check_rulesets.py` now
+fails when a document names a ruleset the repository does not
+carry, so this paragraph is checkable rather than asserted. And a
+queue was refused on
+2026-09-12 because every pull request that day sat `queued` on
+starved runners, where an ALLGREEN queue would have stopped every
+merge rather than gated it. Checks completed in seconds on
+2026-09-13, which is what changed.
+
+The cost of the ungated interval is recorded rather than implied:
+RFD 2245 landed with six of nine checks red and stopped
+`mix rfd.render` for all 318 RFD sources until it was trimmed.
 
 A session bundle is a set of changes that carry each other's
 reasoning: three RFDs whose bodies cite each other, a blocklist
