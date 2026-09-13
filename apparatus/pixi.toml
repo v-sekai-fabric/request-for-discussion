@@ -1,0 +1,87 @@
+[workspace]
+name = "springbone-apparatus"
+version = "0.1.0"
+description = "Spring-bone chain-reduction apparatus: MuJoCo emulation, editor-measured calibration, and the GPU-batched parameter sweep."
+channels = ["conda-forge"]
+# linux-64 carries the GPU sweep: JAX publishes CUDA wheels for Linux only, so
+# the MJX work runs under WSL even though the editor recording is made on win-64.
+platforms = ["win-64", "linux-64"]
+
+[dependencies]
+# 3.12 rather than the host 3.14: JAX has no 3.14 wheels, and pinning it here is
+# what stops the next desk from discovering that the hard way.
+python = "3.12.*"
+numpy = ">=1.26"
+
+[pypi-dependencies]
+mujoco = ">=3.13"
+hypothesis = ">=6.100"
+pytest = ">=8"
+
+[tasks]
+test = "pytest test_springbone_mujoco.py -q"
+
+[feature.gpu]
+platforms = ["linux-64"]
+
+[feature.gpu.pypi-dependencies]
+jax = { version = ">=0.4.35", extras = ["cuda12"] }
+mujoco-mjx = ">=3.13"
+
+[feature.gpu.tasks]
+sweep = "python mjx_sweep.py mjx_sweep.json"
+
+# Retargeting by vertex-silhouette fit rather than a joint-name table: SOMA-X's
+# PoseInversion inverts posed vertices to skeleton rotations, and its correctives
+# model carries the residual. soma-x pins its own stack in requirements.txt and
+# keeps it; this environment only declares what is needed to CONSUME it, so the
+# two do not fight over versions.
+# win-64 only: the editor recording and the avatar live on Windows, and the
+# path dependency below resolves against this checkout rather than a portable
+# index, so solving it for linux-64 only produces a Windows path on Linux.
+[feature.retarget]
+platforms = ["win-64"]
+
+# The shared numpy constraint floats to the newest (2.5.3), which scipy 1.15.3
+# refuses. Narrow it here rather than in [dependencies] so the MuJoCo and GPU
+# environments keep the newer numpy they are happy with.
+[feature.retarget.dependencies]
+numpy = ">=1.26,<2.5"
+# trimesh reaches for rtree on any proximity query, and soma-x pins both of
+# these; conda carries their native libraries (libspatialindex) rather than
+# leaving them to a source build.
+rtree = ">=1.3"
+# Force the OpenBLAS BLAS rather than conda's MKL. torch already bundles its
+# own libiomp5md.dll, and MKL ships a second copy; two Intel OpenMP runtimes
+# in one process abort with "OMP: Error #15". The documented escape hatch
+# (KMP_DUPLICATE_LIB_OK) is explicitly unsafe and can silently produce wrong
+# numbers, which is intolerable for a script that measures vertex residuals.
+libblas = { version = "*", build = "*openblas" }
+
+[feature.retarget.pypi-dependencies]
+# PyPI's default Windows torch is CPU-only. Warp already initialises on the
+# 4090 and SOMALayer places its tensors on CUDA, so torch must match or the
+# layer aborts with "Torch not compiled with CUDA enabled".
+torch = { version = "==2.10.0", index = "https://download.pytorch.org/whl/cu128" }
+warp-lang = "==1.11.1"
+trimesh = "==4.11.1"
+scipy = "==1.15.3"
+usd-core = "==26.3"
+# SOMALayer resolves its assets through huggingface_hub on first construction.
+huggingface-hub = ">=0.25"
+
+# soma-x is reached by PYTHONPATH, not installed as a dependency. Installing it
+# drags in its own pins (numpy==1.23.5) which collide with the numpy the conda
+# solve fixes for torch, and the collision is not real: the fit code only needs
+# torch, warp and scipy, all pinned above. This keeps soma-x's declaration its
+# own -- the blocklist's point about projects that already declare themselves.
+[feature.retarget.activation.env]
+PYTHONPATH = "../../../3-interactor/soma-x"
+
+[feature.retarget.tasks]
+# Smoke check: the fit machinery imports and the class is reachable.
+soma-check = "python -c \"from soma.pose_inversion import PoseInversion; print('PoseInversion ok')\""
+
+[environments]
+gpu = ["gpu"]
+retarget = ["retarget"]
