@@ -261,6 +261,11 @@ starved runners, where an ALLGREEN queue would have stopped every
 merge rather than gated it. Checks completed in seconds on
 2026-09-13, which is what changed.
 
+`dot-claude` runs the same shape under ruleset 23145798, gating on
+its one check, `skills`. It had no workflow at all until
+2026-09-13, so a queue there would have serialised merges past
+nothing; the gate came first and the queue followed.
+
 The cost of the ungated interval is recorded rather than implied:
 RFD 2245 landed with six of nine checks red and stopped
 `mix rfd.render` for all 318 RFD sources until it was trimmed.
