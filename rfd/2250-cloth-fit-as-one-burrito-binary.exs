@@ -151,7 +151,6 @@ defmodule RFD2250 do
     bind across all four triplets.
     """
 
-
     drafted_by :ai
   end
 end
