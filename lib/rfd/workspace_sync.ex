@@ -115,7 +115,8 @@ defmodule RFD.WorkspaceSync do
     end
   end
 
-  defp branch_finding(tree, branch, [], _missing), do: {:unpushed_branch, branch, sha(tree, branch)}
+  defp branch_finding(tree, branch, [], _missing),
+    do: {:unpushed_branch, branch, sha(tree, branch)}
 
   defp branch_finding(_tree, branch, _held, missing),
     do: {:remote_missing, branch <> " absent from " <> Enum.join(missing, ", ")}

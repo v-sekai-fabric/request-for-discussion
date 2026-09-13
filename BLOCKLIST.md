@@ -1679,7 +1679,7 @@ site the workspace does not ship (tutorial pages, reference
 docs). ggml's Vulkan backend, which is what replaces WebGPU. A
 Godot engine fork carrying a WebGPU RenderingDevice driver
 alongside Vulkan (RFD 2245, operator directive 2026-09-11) — the
-row blocks WebGPU as the *workspace deployment target*, not
+row blocks WebGPU as the _workspace deployment target_, not
 WebGPU code inside a Godot engine tree; the atelier binary still
 selects Vulkan at boot and the shipping surface stays
 `entities-godot-sandbox` with MoltenVK on macOS.
@@ -1864,16 +1864,16 @@ animal, and the numbers taken from it were never a result, only a sign of life.
 **The replacement has to be better than a swap.** A demo asset with no ground
 truth can only ever answer "did it run". Two things replace it:
 
-  * the Khronos glTF sample assets (`RiggedSimple`, `RiggedFigure`) for the
-    same smoke test -- that repository exists to be redistributable test data
-    and states a licence per model, which is the property the giraffe lacks;
-    check the specific model's stated licence before adding it, since they are
-    not uniform.
-  * a **procedurally generated tube** for anything that is supposed to be a
-    measurement. A tube around a known bone chain has analytic ground-truth
-    weights, so a predicted rig can be scored against the right answer instead
-    of against "it produced something". That is a strictly better comparison
-    than the giraffe ever was, and it is ours.
+- the Khronos glTF sample assets (`RiggedSimple`, `RiggedFigure`) for the
+  same smoke test -- that repository exists to be redistributable test data
+  and states a licence per model, which is the property the giraffe lacks;
+  check the specific model's stated licence before adding it, since they are
+  not uniform.
+- a **procedurally generated tube** for anything that is supposed to be a
+  measurement. A tube around a known bone chain has analytic ground-truth
+  weights, so a predicted rig can be scored against the right answer instead
+  of against "it produced something". That is a strictly better comparison
+  than the giraffe ever was, and it is ours.
 
 ### WSL is blocked as a way to run anything, and a real failure is why
 

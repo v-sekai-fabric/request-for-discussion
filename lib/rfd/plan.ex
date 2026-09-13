@@ -89,7 +89,11 @@ defmodule RFD.Plan do
       kind: kind,
       schema: schema,
       name: name,
-      doc: Enum.find_value(body, fn {:doc, d} -> d; _ -> nil end),
+      doc:
+        Enum.find_value(body, fn
+          {:doc, d} -> d
+          _ -> nil
+        end),
       attrs: for({:attr, k, t, v, o} <- body, do: {k, t, v, o}),
       rels: for({:rel, n, ts} <- body, do: {n, ts}),
       children: for(%{__prim__: true} = c <- body, do: c)
@@ -134,8 +138,11 @@ defmodule RFD.Plan do
 
   def validate!(%__MODULE__{} = p) do
     case problems(p) do
-      [] -> p
-      ps -> raise ArgumentError, "plan #{p.name} is outside its shape:\n  " <> Enum.join(ps, "\n  ")
+      [] ->
+        p
+
+      ps ->
+        raise ArgumentError, "plan #{p.name} is outside its shape:\n  " <> Enum.join(ps, "\n  ")
     end
   end
 
@@ -176,10 +183,18 @@ defmodule RFD.Plan do
   defp prim_lines(prim, depth) do
     pad = String.duplicate("    ", depth)
     schema = if prim.schema, do: " #{prim.schema}", else: ""
+
     head =
       case prim[:doc] do
-        nil -> ["#{pad}#{prim.kind}#{schema} #{q(prim.name)}"]
-        d -> ["#{pad}#{prim.kind}#{schema} #{q(prim.name)} (", "#{pad}    doc = #{lit(d)}", "#{pad})"]
+        nil ->
+          ["#{pad}#{prim.kind}#{schema} #{q(prim.name)}"]
+
+        d ->
+          [
+            "#{pad}#{prim.kind}#{schema} #{q(prim.name)} (",
+            "#{pad}    doc = #{lit(d)}",
+            "#{pad})"
+          ]
       end
 
     attrs =
@@ -225,6 +240,7 @@ defmodule RFD.Plan do
   defp lit(v) when is_binary(v) do
     if String.contains?(v, "\n"), do: block(v), else: q(v)
   end
+
   defp lit(v) when is_list(v), do: "(" <> Enum.map_join(v, ", ", &lit/1) <> ")"
 
   defp q(s), do: "\"" <> String.replace(s, ~r/["\\]/, fn c -> "\\" <> c end) <> "\""

@@ -18,6 +18,7 @@ defmodule EscapesTest do
 
   test "the corpus records escapes and names known guards", %{register: reg} do
     assert length(reg.escapes) >= 11
+
     for e <- reg.escapes do
       assert e.guard in RFD.Escapes.guards()
       refute e.reported == e.actual, "a row where they match records no escape: #{e.on}"
@@ -28,6 +29,7 @@ defmodule EscapesTest do
     named = reg.escapes |> Enum.map(& &1.guard) |> MapSet.new()
     covered = MapSet.new(~w(run_checked require_nonempty require_file require_corpus
                             require_engaged expect_fail require_precondition require_literal)a)
+
     assert MapSet.subset?(named, covered),
            "no control for: #{inspect(MapSet.difference(named, covered))}"
   end
@@ -72,13 +74,18 @@ defmodule EscapesTest do
   end
 
   test "require_precondition treats an unmet precondition as a failure, not a skip" do
-    assert {:error, _} = require_precondition("unmet", fn -> run_checked("sh", ["-c", "exit 2"]) end)
-    assert {:ok, :met} = require_precondition("met", fn -> run_checked("sh", ["-c", "exit 0"]) end)
+    assert {:error, _} =
+             require_precondition("unmet", fn -> run_checked("sh", ["-c", "exit 2"]) end)
+
+    assert {:ok, :met} =
+             require_precondition("met", fn -> run_checked("sh", ["-c", "exit 0"]) end)
   end
 
   test "require_literal catches text the shell rewrote" do
     assert {:error, _} = require_literal("eaten", "cmd | tail", "one would.  exits zero")
-    assert {:ok, _} = require_literal("survived", "cmd | tail", "a check like cmd | tail exits zero")
+
+    assert {:ok, _} =
+             require_literal("survived", "cmd | tail", "a check like cmd | tail exits zero")
   end
 
   describe "the facade removes the choice that caused the SERIALS escape" do

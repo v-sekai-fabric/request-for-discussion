@@ -63,7 +63,8 @@ defmodule RFD.Escapes do
       # The point of a row is the gap between the two. A row where they match
       # records no escape.
       if r == a do
-        raise ArgumentError, "escape on #{on}: reported and actual are identical, so nothing escaped"
+        raise ArgumentError,
+              "escape on #{on}: reported and actual are identical, so nothing escaped"
       end
 
       for {field, text} <- [reported: r, actual: a, on: on] do
