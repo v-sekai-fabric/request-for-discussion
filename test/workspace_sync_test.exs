@@ -161,7 +161,7 @@ defmodule RFD.WorkspaceSyncTest do
     repo(root, ".repo/manifests")
 
     trees = WorkspaceSync.trees(root)
-    assert manifests in trees
+    assert Path.expand(manifests) in trees
   end
 
   test "an empty walk is an error, not a clean result", %{root: root} do
