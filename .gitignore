@@ -29,3 +29,8 @@ rfd/[0-9][0-9][0-9][0-9]-*/DETAILS.md
 # writes the layer beside it. A tracked .usda would be a second copy that can be edited.
 /pen-66606.usda
 apparatus/*/*.usda
+
+# Artifacts the apparatus writes where it runs. The sources beside them -- the
+# scripts, pixi.toml, pixi.lock and the exported chain data -- are tracked.
+apparatus/.pixi/
+apparatus/MUJOCO_LOG.TXT
