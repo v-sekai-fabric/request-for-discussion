@@ -3,7 +3,7 @@
 `apparatus/springbone_mujoco.py` maps a social-VR spring-bone chain onto a MuJoCo
 ball-jointed body so a chain budget can be met by measured silhouette error rather than a
 guessed geometry knob. The five constants doing that mapping were guessed. Three of them
-were wrong, and the measurement is what says so.
+were wrong, and the measurement says so.
 
 ## The rig
 
