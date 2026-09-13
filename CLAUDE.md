@@ -153,6 +153,15 @@ one.** `repo list` and the org's archived set are the two things to read.
 SHAs in the manifest; placement is satisfied by the manifest entry,
 provenance rides with the SHA.
 
+**`interactor-see-through-ggml` is unplaced on purpose, and this is
+where that is recorded.** `default.xml` carries no comments, so a manifest
+cannot say why something is absent from it; absence and oversight look the
+same in that file. The See-Through checkpoints are blocklisted because every
+one states no licence and the depth one derives from OpenRAIL++-M, and the
+repository is held outside the goal for the same reason. It is live and it is
+not drift. A reader applying the rule above without this paragraph places it,
+which is a mistake already made once and caught before it landed.
+
 **Deliverables.** Video-ready assets land as PSD or a video/image intermediate
 with `.cff` title and metadata, before any pod tear down. PSD because it carries
 lossless vector and raster layers.
