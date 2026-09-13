@@ -250,16 +250,14 @@ queue for the whole timeout and then fails it, so the required set
 is read off the workflow's `if:` conditions rather than assumed
 from the list of jobs.
 
-It was created 2026-09-13, and both halves of that date matter.
-An earlier ruleset 21131040 was described here for weeks and never
-existed, retracted 2026-09-12; `scripts/check_rulesets.py` now
-fails when a document names a ruleset the repository does not
-carry, so this paragraph is checkable rather than asserted. And a
-queue was refused on
-2026-09-12 because every pull request that day sat `queued` on
-starved runners, where an ALLGREEN queue would have stopped every
-merge rather than gated it. Checks completed in seconds on
-2026-09-13, which is what changed.
+`scripts/check_rulesets.py` fails when a document names a ruleset
+the repository does not carry, so these paragraphs are checkable
+rather than asserted.
+
+A queue was refused on 2026-09-12 because every pull request that
+day sat `queued` on starved runners, where an ALLGREEN queue would
+have stopped every merge rather than gated it. Checks completed in
+seconds on 2026-09-13, which is what changed.
 
 `dot-claude` runs the same shape under ruleset 23145798, gating on
 its one check, `skills`. It had no workflow at all until
@@ -411,27 +409,30 @@ a command rather than being discovered six months later.
 it reads its state list and its README line limit out of RFD 1000 rather than
 restating them, so the document and the gate cannot disagree.
 
-## How Retracted RFD Topics Are Deleted
+## How an RFD Stays Accurate
 
-A retracted RFD topic deletes its body. Conventional deletion is the
-default — git history preserves every dropped paragraph, and the
-successor RFD's `## Related` section preserves the "why". A retracted
-RFD file stays on disk because its SERIALS entry names it; the file
-shrinks to title + `**State:** abandoned` + canary, no explanatory
-prose. Amendment paragraphs are not stacked mid-body across reversals;
-the RFD is rewritten to say the current answer.
+An RFD says what is true of the system now, in the tenseless continuous
+present (RFD 2172). It is not a log of how the answer was reached, so a
+statement that stops being true is deleted rather than retracted in
+place. Amendment paragraphs are not stacked mid-body across reversals,
+and a section naming a gap that has since closed goes rather than being
+rewritten to say nothing is outstanding.
 
-**Keep a specific-citation pointer** only when a live citation from
-outside the workspace's git history names the retracted section by its
-wording, and the successor RFD does not carry the same claim. That is
-rare. When kept, the pointer is one line, of the form:
+A reference to something that no longer exists is deleted outright: a
+ruleset that was never created, a repository since renamed, a branch
+since merged away. Git history preserves every dropped paragraph, and
+the successor RFD's `## Related` section preserves the "why".
 
-    **Lumina2 distillation as primary:** retracted 2026-09-04, see
-    `logbook-lumina2-distill-n1000-shelved.md`.
+A retracted RFD topic deletes its body. The file stays on disk because
+its SERIALS entry names it; it shrinks to title + `**State:**
+abandoned` + canary, with no explanatory prose.
 
-**The logbook** is the one carve-out: it keeps its "retractions stay in
-place next to what they retract" shape because it records events, and
-the retracted measurement is itself an event.
+**The logbook records retractions, and that is the division.** An entry
+records an event, and a withdrawn measurement is itself an event, so it
+keeps its "retractions stay in place next to what they retract" shape.
+An RFD describes the system rather than the path to it, so the same
+paragraph in an RFD is drift. When a number is withdrawn, the RFD stops
+stating it and the logbook entry says what it was and why it went.
 
 ## How AI-drafted RFDs are attested
 
@@ -510,13 +511,14 @@ two documents asserting a merge policy nothing applies. Reading the claim
 out of the document rather than restating it is the same shape as
 `check-rfd-structure.py` reading its line limit out of RFD 1000.
 
-A retraction is not a claim. An id in a paragraph that retracts it stays
-readable in place, per _How Retracted RFD Topics Are Deleted_, and the gate
-passes over it. Recreating that ruleset means deleting the retraction, which
-is what makes the claim live again.
+A claim is keyed by repository and id together, read from a repository
+named in backticks in the same paragraph, so naming one repository's
+ruleset does not send the gate asking another. A paragraph that retracts an
+id is not a claim, which the logbook needs because it keeps retractions.
 
-An unreadable API is a FAIL, never a skip; nine controls carry both
-directions.
+An unreadable API is a FAIL, never a skip; twelve controls carry both
+directions, including that the right id against the wrong repository does
+not satisfy a claim.
 
     python scripts/check_rulesets.py --self-test
     python scripts/check_rulesets.py --repo <owner>/<name>
