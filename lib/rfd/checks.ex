@@ -55,7 +55,8 @@ defmodule RFD.Checks do
   Incident: `grep 2235 SERIALS.exs` returned nothing and was used to justify
   deviating from the retraction rule; the serial is in `SERIALS-vsekai-fabric.exs`.
   """
-  def require_corpus(label, _pattern, []), do: {:error, "#{label}: empty corpus, nothing was searched"}
+  def require_corpus(label, _pattern, []),
+    do: {:error, "#{label}: empty corpus, nothing was searched"}
 
   def require_corpus(label, pattern, paths) when is_list(paths) do
     case Enum.reject(paths, &File.exists?/1) do
@@ -77,8 +78,11 @@ defmodule RFD.Checks do
   """
   def require_engaged(label, evidence) do
     case require_nonempty(label, evidence) do
-      {:ok, e} -> {:ok, e}
-      {:error, _} -> {:error, "#{label}: no evidence the mechanism engaged; the control proves nothing"}
+      {:ok, e} ->
+        {:ok, e}
+
+      {:error, _} ->
+        {:error, "#{label}: no evidence the mechanism engaged; the control proves nothing"}
     end
   end
 

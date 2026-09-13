@@ -34,6 +34,7 @@ defmodule RFD.WorkspaceSyncTest do
     bare = Path.join(root, name <> ".git")
     git(from, ["init", "-q", "--bare", bare])
     git(from, ["remote", "add", name, bare])
+
     if Keyword.get(opts, :push, true) do
       git(from, ["push", "-q", name, "main"])
       git(from, ["fetch", "-q", name])
