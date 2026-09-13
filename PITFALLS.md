@@ -212,20 +212,28 @@ checks on a temporary branch that already has main's tip merged in, and merges i
 `.github/workflows/checks.yml` declares `merge_group:` as a trigger, so the workflow side
 is ready. `gh pr merge --auto --merge` adds to a queue rather than firing immediately.
 
-**No such queue is configured here, and this entry said otherwise.** It described
-`weftspun/request-for-discussion` main ruleset id 21131040 with `MERGE` method, `ALLGREEN`
-grouping, `min_entries_to_merge_wait_minutes: 0` and a 60-minute check timeout. The
-repository carries zero rulesets and no branch protection; the id returns 404. Retracted
-2026-09-12. `scripts/check_rulesets.py` reads the ids named in `CLAUDE.md` and this file
-and fails when the repository does not carry them, so the claim cannot go stale again in
-silence.
+**The queue is ruleset 23145233**, created 2026-09-13 on the default branch: `MERGE`
+method, `ALLGREEN` grouping, a 60-minute check timeout, batches of up to five, and a pull
+request required with zero approvals.
 
-**When not to enable.** Two conditions, and both hold here today. A repo with a single
-committer and rarely-concurrent PRs gains serialisation overhead with no contention to
-serialise. And a queue waits on the checks: every pull request on 2026-09-11 and
-2026-09-12 sat `queued` on GitHub-hosted runners, several beyond half an hour, so an
-ALLGREEN queue would convert a slow check into a blocked merge. Fix runner capacity
-first.
+**Require only checks that run on `merge_group`.** Seven of the nine jobs in
+`checks.yml` do; `rfd-canary` and `rulesets` guard on `pull_request` alone. A required
+check that never runs holds the queue for the whole 60 minutes and then fails it, so the
+required set is read off each job's `if:` condition rather than assumed from the list of
+jobs.
+
+**An earlier id in this entry named nothing.** It described main ruleset id 21131040 with
+`MERGE` method, `ALLGREEN` grouping and a 60-minute timeout while the repository carried
+zero rulesets and that id returned 404. Retracted 2026-09-12.
+`scripts/check_rulesets.py` reads the ids named in `CLAUDE.md` and this file and fails
+when the repository does not carry them, so the claim cannot go stale again in silence.
+
+**When not to enable, and why that changed.** A repo with a single committer and
+rarely-concurrent PRs gains serialisation with no contention to serialise, which still
+argues against a queue here. The second condition no longer holds: every pull request on
+2026-09-11 and 2026-09-12 sat `queued` on starved runners, several beyond half an hour,
+so a queue would have converted a slow check into a blocked merge. On 2026-09-13 checks
+completed in seconds, which is what made the queue affordable.
 
 ## 12. A timeout is not a state
 

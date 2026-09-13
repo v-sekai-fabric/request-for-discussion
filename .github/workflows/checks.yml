@@ -138,7 +138,7 @@ jobs:
       - uses: ./.github/actions/render-rfds
       - run: pip install -r scripts/requirements.txt
       - run: python scripts/check-rfd-serials.py --self-test
-      - run: python scripts/check-rfd-serials.py --base origin/${{ github.event.pull_request.base.ref || 'main' }}
+      - run: python scripts/check-rfd-serials.py --base origin/${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
 
   rfd-structure:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -159,7 +159,7 @@ jobs:
       # is pinned. RFD 1124 says why the AST is worth it.
       - run: pip install -r scripts/requirements.txt
       - run: python scripts/check-rfd-structure.py --self-test
-      - run: python scripts/check-rfd-structure.py --changed origin/${{ github.event.pull_request.base.ref || 'main' }}
+      - run: python scripts/check-rfd-structure.py --changed origin/${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
 
   # THE COMMENT LADDER, A JOB RATHER THAN A prek HOOK ALONE, AND THE REASON IS THE BASE.
   #
@@ -182,7 +182,7 @@ jobs:
           python-version: "3.x"
       # Controls first: three of the five must reject known-broken input.
       - run: python scripts/check_comment_ladder.py --self-test
-      - run: python scripts/check_comment_ladder.py --base origin/${{ github.event.pull_request.base.ref || 'main' }}
+      - run: python scripts/check_comment_ladder.py --base origin/${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
 
   # Trope density did not rise. Same diff-based shape as comment-ladder,
   # narrower scope (rfd/*/README.md, rfd/*/DETAILS.md, logbook/*.md) so the
@@ -199,7 +199,7 @@ jobs:
         with:
           python-version: "3.x"
       - run: python scripts/check_tropes.py --self-test
-      - run: python scripts/check_tropes.py --base origin/${{ github.event.pull_request.base.ref || 'main' }}
+      - run: python scripts/check_tropes.py --base origin/${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
 
   # EVERY NEW RFD CARRIES THE CANARY SENTENCE, which is the workspace's M&M's clause.
   # An AI that read `CLAUDE.md` before drafting adds the sentence; one that skipped it
@@ -207,7 +207,7 @@ jobs:
   # not exist on the base branch, so existing RFDs are outside the trap and human-only
   # drafts add nothing they cannot truthfully attest.
   rfd-canary:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -219,7 +219,7 @@ jobs:
           python-version: "3.x"
       - uses: ./.github/actions/render-rfds
       - run: python scripts/check_rfd_canary.py --self-test
-      - run: python scripts/check_rfd_canary.py --base origin/${{ github.event.pull_request.base.ref || 'main' }}
+      - run: python scripts/check_rfd_canary.py --base origin/${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
 
   # THE RULESETS THE DOCUMENTS DESCRIBE ARE THE RULESETS THE REPOSITORY HAS. CLAUDE.md and
   # PITFALLS.md both name a ruleset by id and state the merge policy it enforces. A ruleset
@@ -227,7 +227,7 @@ jobs:
   # applies, and the file describing the gate reads as evidence the gate is there. RFD 2245
   # merged with six of nine checks red because of exactly that gap.
   rulesets:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
