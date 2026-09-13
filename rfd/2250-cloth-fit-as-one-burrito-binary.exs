@@ -151,13 +151,6 @@ defmodule RFD2250 do
     bind across all four triplets.
     """
 
-    details "What this document does not settle", ~S"""
-    Placement. `V-Sekai-fire/cloth-fit` is live and unarchived and appears in
-    no manifest, so the Sides rule is unmet for it. This RFD describes the
-    work rather than placing the repository, because placement is a manifest
-    change and belongs in its own pull request against `manifest-weftspun`.
-    """
-
     drafted_by :ai
   end
 end
